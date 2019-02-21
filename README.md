@@ -1,7 +1,10 @@
 # How to start
+
 ```bash
+$ pip install Django
 $ bash start.sh
 ```
+
 You can also set host & port, use -h, -p options.
 Default values are below.<br>
 
