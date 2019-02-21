@@ -1,0 +1,28 @@
+path{
+    fill: gainsboro;
+    stroke: white;
+    stroke-width: 1px;
+}
+
+path .municipality:hover{
+    fill: orange;
+}
+
+#map .active{
+    fill: #2fa4e7;
+    opacity: 0;
+}
+
+#subMap {
+    stroke-width: 0 !important;
+}
+
+#subMap:hover {
+    fill: orange !important;
+}
+
+#subMap .active{
+    opacity: 1 !important;
+    stroke: white !important;
+    stroke-width: 0.2px !important;
+}

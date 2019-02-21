@@ -1,0 +1,201 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!--bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <!-- d3-->
+    <script src="http://d3js.org/d3.v5.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+
+    <!-- stylesheet & scripts-->
+    <link rel="stylesheet" href="{% static 'map/stylesheet/map.css' %}">
+    <link rel="stylesheet" href="{% static 'map/stylesheet/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'map/stylesheet/graph.css' %}">
+    <script src="{% static 'map/script/map.js' %}"></script>
+    <script src="{% static 'map/script/specificDeviceModal.js' %}"></script>
+    <script src="{% static 'map/script/speedometer.js' %}"></script>
+    <script src="{% static 'map/script/lineChart.js' %}"></script>
+
+    <!-- initialize-->
+    <script>
+        var PROVINCE_JSON_DATA_URL = "{% static 'map/province.json' %}",
+            TEST_SPOT_JSON_DATA_URL = "{% static 'map/testSpots.json' %}",
+            TEST_CSV_GRAPH_DATA_URL = "{% static 'map/testCsv.csv' %}";
+
+        var MUNICIPALITIES_JSON_DATA_URL = "{% static 'map/subMunicipalities.json' %}";
+        var device_spots;
+
+        function get_device_spots( callback){
+            /*
+                now, get device spot data from a file[TEST_SPOT_JSON_DATA_URL]
+            */
+            d3.json( TEST_SPOT_JSON_DATA_URL).then( function( spot_data){
+                device_spots = spot_data;
+                callback()
+            })
+        }
+
+        function initialize(){
+            /*
+                load test device spot data first, then create map
+                when map_manager called, create map
+                draw right chart for test
+                show device status that powered on
+            */
+            get_device_spots( function(){
+                map_manager.get_instance().spotting_on_map( device_spots);
+            });
+            create_line_chart( TEST_CSV_GRAPH_DATA_URL, null, "#summaryGraph", 'x');
+            show_device_status_count(180);
+        }
+
+        $( window).resize( function(){
+            /*
+                when the window resized, re-create according to window size.
+             */
+            map_manager.resize_window( device_spots);
+            create_line_chart( TEST_CSV_GRAPH_DATA_URL, null, "#summaryGraph", 'x');
+        });
+
+    </script>
+    <style>
+        body{
+            background-color: darkgrey;
+        }
+    </style>
+</head>
+<body onload="initialize()">
+    <!-- navigation top-->
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow" height="40px">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Sslab</a>
+        <!-- query form-->
+        <input class="form-control form-control-dark w-100" type="text" placeholder="Query" aria-label="Search">
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="#">Search</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row" style="padding-top:50px">
+            <nav class="col-md-2 d-none d-md-block d-lg-block bg-light sidebar">
+                <!-- sidebar on left-->
+                <div class="sidebar-sticky">
+                    <!-- top-->
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a href="" class="nav-link active">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                                Reports
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        Recent reports
+                    </h6>
+
+                    <!-- bottom-->
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                report 1
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- map-->
+            <div class="col-md-6 ml-sm-auto col-lg-6" id="map" style="padding:0"></div>
+
+            <!-- status board-->
+            <div class="col-md-4 col-lg-4">
+                <br>
+                <div class="card container-fluid shadow">
+                    <div class="card-header bg-white text-center">
+                        <h6>Status</h6>
+                    </div>
+                    <div class="card-body bg-white text-center">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h7>Turn on</h7>
+                                <svg id="deviceMeter" width="100px" height="100px"></svg>
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <!-- simple graph-->
+                <div class="card container-fluid shadow">
+                    <div class="card-header bg-white text-center">
+                        <h6>Graph</h6>
+                    </div>
+                    <div class="card-body bg-white text-center">
+                        <div id="summaryGraph">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal-->
+    <div class="modal fade" id="deviceModal" tabindex="-1" role="dialog" aria-labelledby="deviceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5>Device status</h5>
+                </div>
+                <!-- device`s info-->
+                <div class="modal-body">
+                    <br>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <h6>Tag</h6>
+                            <h7 id="deviceTag"></h7>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>Location</h6>
+                            <p id="deviceLocation"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>Power</h6>
+                            <p id="devicePower"></p>
+                        </div>
+                    </div>
+
+                    <div id="modalGraphs">
+                        <div id="deviceImages"></div>
+                        <div id="xModalAccGraph"></div>
+                        <div id="yModalAccGraph"></div>
+                        <div id="zModalAccGraph"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+[
+  {
+    "device-tag": 290,
+    "lat": 35.862903,
+    "lon": 129.188649,
+    "province": "경상북도",
+    "municipality": "경주",
+    "sub-municipality": "석장동",
+    "detail": "771-18번지"
+  },
+  {
+    "device-tag": 291,
+    "lat": 36.131239,
+    "lon": 129.259139,
+    "province": "경상북도",
+    "municipality": "포항",
+    "sub-municipality": "신광면",
+    "detail": "상읍리 157-4번지"
+  }
+]

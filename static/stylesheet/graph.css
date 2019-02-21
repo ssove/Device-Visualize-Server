@@ -1,0 +1,20 @@
+.line {
+    fill: none;
+    stroke: orange;
+    stroke-width: 1.5px;
+}
+
+.overlay{
+    fill: none;
+    pointer-events: all;
+}
+
+.dot{
+    fill: orange;
+    stroke: white;
+}
+
+.focus circle{
+    fill: none;
+    stroke: steelblue;
+}
