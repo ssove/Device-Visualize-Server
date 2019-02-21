@@ -20,7 +20,3 @@ It allows only '155.230.28.*'. If you wanna change, revise ALLOWED_HOST in [sett
 
 ## Korea path resources
 https://github.com/southkorea/southkorea-maps/tree/master/kostat/2018/json
-
-## Code style
-html, stylesheet: camelCase<br>
-javascript, python: snake_case
