@@ -1,6 +1,6 @@
 # How to start
 ```bash
-$ start.sh
+$ bash start.sh
 ```
 You can also set host & port, use -h, -p options.
 Default values are below.<br>
