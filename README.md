@@ -12,8 +12,8 @@ Default values are below.<br>
 Belows are examples.
 
 ```bash
-$ start.sh -h 155.230.28.129
-$ start.sh -h 155.230.28.129 -p 9010
+$ bash start.sh -h 155.230.28.129
+$ bash start.sh -h 155.230.28.129 -p 9010
 ```
 
 It allows only '155.230.28.*'. If you wanna change, revise ALLOWED_HOST in [settings.py]. 
