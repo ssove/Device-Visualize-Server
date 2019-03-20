@@ -7,8 +7,8 @@
     <title>Title</title>
 
     <!--bootstrap-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
@@ -20,7 +20,7 @@
     <!-- stylesheet & scripts-->
     <link rel="stylesheet" href="{% static 'map/stylesheet/map.css' %}">
     <link rel="stylesheet" href="{% static 'map/stylesheet/dashboard.css' %}">
-    <link rel="stylesheet" href="{% static 'map/stylesheet/graph.css' %}">
+    <link rel="stylesheet" href="{% static 'map/stylesheet/<gra></gra>ph.css' %}">
     <script src="{% static 'map/script/map.js' %}"></script>
     <script src="{% static 'map/script/specificDeviceModal.js' %}"></script>
     <script src="{% static 'map/script/speedometer.js' %}"></script>
@@ -199,14 +199,31 @@
         </div>
     </div>
     <script>
+        var map;
         function initMap() {
             var knu = {lat: 35.887148, lng: 128.608510};
-            var map = new google.maps.Map(
-                document.getElementById('map'), {zoom: 12, center: knu});
-            var marker = new google.maps.Marker({position: knu, map: map});
-            $.getJSON('/static/stylesheet/testSpots.json', function(data) {
-                console.log(data);
-            })
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: knu
+            });
+            var marker = new google.maps.Marker({
+                position: knu,
+                map: map
+            });
+            var script = document.createElement('script');
+            script.src = 'https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js';
+            document.getElementsByTagName('head')[0].appendChild(script);
+        }
+        window.eqfeed_callback = function(results) {
+            console.log(results);
+            for (var i = 0; i < results.features.length; i++) {
+                var coords = results.features[i].geometry.coordinates;
+                var latLng = new google.maps.LatLng(coords[1],coords[0]);
+                var marker = new google.maps.Marker({
+                    position: latLng,
+                    map: map
+                });
+            }
         }
     </script>
 

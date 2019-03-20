@@ -26,4 +26,4 @@ do
 done
 
 echo "Running django server host: ${host_ip} port: ${port} ..."
-python manage.py runserver ${host_ip}:${port}
+python3 manage.py runserver ${host_ip}:${port}
