@@ -52,9 +52,7 @@
                 draw right chart for test
                 show device status that powered on
             */
-            get_device_spots( function(){
-                map_manager.get_instance().spotting_on_map( device_spots);
-            });
+
             create_line_chart( TEST_CSV_GRAPH_DATA_URL, null, "#summaryGraph", 'x');
             show_device_status_count(180);
         }
@@ -69,7 +67,11 @@
 
     </script>
     <style>
-        body{
+        #map {
+            height: 600px;
+            width: 40%;
+        }
+        body {
             background-color: darkgrey;
         }
     </style>
@@ -196,6 +198,21 @@
             </div>
         </div>
     </div>
+    <script>
+        function initMap() {
+            var knu = {lat: 35.887148, lng: 128.608510};
+            var map = new google.maps.Map(
+                document.getElementById('map'), {zoom: 12, center: knu});
+            var marker = new google.maps.Marker({position: knu, map: map});
+            $.getJSON('/static/stylesheet/testSpots.json', function(data) {
+                console.log(data);
+            })
+        }
+    </script>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3nnhZBh8mTWHzXvvbt3GL7ZBM11SKcg4&callback=initMap">
+    </script>
 
 </body>
 </html>
